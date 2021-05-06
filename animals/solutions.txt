@@ -1,0 +1,32 @@
+1.
+db.animals.updateMany({}, {$set: {pris: 100}})
+
+2.
+Använd $set för att tilldela
+db.animals.updateMany({art: 'Shetlandsponny'}, {$set: {pris: 200}})
+eller $inc för att ändra
+db.animals.updateMany({art: 'Shetlandsponny'}, {$inc: {pris: 100}})
+
+3. 
+db.animals.updateMany(
+    {
+        category: 'Däggdjur', 
+        birthdate: {$gt: '2010-01-01'}
+    }, 
+    {
+        $inc: {pris: 50}
+    }
+)
+
+Intro 2:
+db.animals.aggregate(
+    {
+        $match: {}
+    }, 
+    {
+        $group: {
+            _id: "$category", 
+            antal: {$sum: "$pris" }
+        }
+    }
+)

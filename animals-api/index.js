@@ -39,6 +39,8 @@ app.get('/animals', async(req, res) => {
     const db = client.db('zoo')
     const animals = db.collection('animals')
 
+    // Funktioner som .find() ger tillbaka en s.k. cursor. 
+    // En cursor fungerar ungefär som en array, dvs det går att göra foreach eller i det här fallet, for-of. Bra vid async.
     const result = animals.find({})
     let retur = []
     for await (const document of result) {
