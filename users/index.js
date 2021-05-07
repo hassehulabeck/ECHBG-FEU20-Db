@@ -1,8 +1,10 @@
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
-
 const User = require('./models/user')
+
+// För att kunna ta emot post-requests och läsa req.body etc
+app.use(express.urlencoded({ extended: true }))
 
 // När uppkoppling är gjord - några eventhandlers som agerar då.
 const db = mongoose.connection
@@ -27,7 +29,8 @@ db.once('open', () => {
                 birthday: req.body.birthday
             })
             const result = await newUser.save()
-            if (result.insertedCount == 1) {
+            console.log(result)
+            if (result !== null) {
                 res.json(newUser)
             } else {
                 res.send("Det blev problem med att spara i db.")
@@ -40,7 +43,7 @@ db.once('open', () => {
 
 app.listen(3000, () => {
     console.log("Nu är jag lyssnade.")
-    mongoose.connect('mongodb://localhost:27017', { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
+    mongoose.connect('mongodb://localhost:27017', { useNewUrlParser: true, useUnifiedTopology: true, dbName: 'webbsite' }, (err) => {
         if (err) console.error(err)
     })
 })
