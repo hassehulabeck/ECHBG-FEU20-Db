@@ -78,19 +78,19 @@ app.get('/mammals', async(req, res) => {
 
 // Async / await
 app.post('/', async(req, res) => {
-    const client = await MongoClient.connect(url, { useUnifiedTopology: true })
+        const client = await MongoClient.connect(url, { useUnifiedTopology: true })
 
-    const db = client.db('zoo')
-    const animals = db.collection('animals')
+        const db = client.db('zoo')
+        const animals = db.collection('animals')
 
-    console.log(req.body)
+        console.log(req.body)
 
-    const result = await animals.insertOne(req.body)
-    if (result.insertedCount != 1) res.send("Nope")
-    else res.send("Yay")
+        const result = await animals.insertOne(req.body)
+        if (result.insertedCount != 1) res.send("Nope")
+        else res.send("Yay")
 
-})
-
+    })
+    // Nu funkar patchen...
 app.patch('/:animalid', async(req, res) => {
     if (ObjectId.isValid(req.params.animalid)) {
 
