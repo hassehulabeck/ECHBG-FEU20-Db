@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const mongodb = require('mongodb')
-let ObjectId = mongodb.ObjectId // Behövs för att söka efter _id.
+const ObjectId = mongodb.ObjectId // Behövs för att söka efter _id.
 
 
 const MongoClient = mongodb.MongoClient
@@ -36,7 +36,7 @@ app.get('/:animalid', async(req, res) => {
         const client = await MongoClient.connect(url, { useUnifiedTopology: true })
 
         let searchquery = req.params.animalid == null ? {} : {
-            _id: new ObjectId(animalid)
+            _id: new ObjectId(req.params.animalid)
         }
 
         const db = client.db('zoo')
@@ -91,26 +91,29 @@ app.post('/', async(req, res) => {
 
 })
 
-app.patch('/', async(req, res) => {
-    const client = await MongoClient.connect(url, { useUnifiedTopology: true })
+app.patch('/:animalid', async(req, res) => {
+    if (ObjectId.isValid(req.params.animalid)) {
+        const client = await MongoClient.connect(url, { useUnifiedTopology: true })
 
-    const db = client.db('zoo')
-    const animals = db.collection('animals')
+        const db = client.db('zoo')
+        const animals = db.collection('animals')
 
-    let id = new ObjectID(req.body.id)
-    const filter = { _id: id }
-
-    const updateDocument = {
-        $set: {
-            name: req.body.name,
-            category: req.body.category
+        let filter = {
+            _id: new ObjectId(req.params.animalid)
         }
-    }
 
-    const result = await animals.updateOne(filter, updateDocument)
-    console.log("Result" + result)
-    if (result.insertedCount != 1) res.send("Nope")
-    else res.send("Yay")
+        const updateDocument = {
+            $set: {
+                name: req.body.name,
+                category: req.body.category
+            }
+        }
+
+        const result = await animals.updateOne(filter, updateDocument)
+
+        if (result.modifiedCount != 1) res.send("Nope")
+        else res.send("Yay")
+    }
 
 })
 
