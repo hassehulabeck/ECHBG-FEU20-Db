@@ -18,6 +18,7 @@ router.get('/:name', async(req, res) => {
 })
 
 // Hämta alla noteringar för en dag - format 'YYYY-MM-DD'
+// Observera att URL har /datum, detta för att annars 'fångar' :name upp alla datum. 
 router.get('/datum/:date', async(req, res) => {
 
     /* Date är ofta lite lurigt. 
