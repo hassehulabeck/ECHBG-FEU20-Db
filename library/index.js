@@ -34,13 +34,18 @@ app.post('/', (req, res) => {
 
         const book = new Book({
             title: req.body.title,
-            author: author._id
+            author: author._id,
+            isbn: req.body.isbn
         })
 
         book.save((err) => {
             if (err) console.error(err)
 
-            res.send("Boken är sparad")
+            // Kolla om det blivit något fel.
+            let error = book.validateSync()
+
+            if (!error) res.send("Boken är sparad")
+            else res.send(error.message)
         })
     })
 })
