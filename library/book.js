@@ -9,8 +9,13 @@ const bookSchema = Schema({
     },
     isbn: {
         type: String,
-        minLength: 13,
-        maxLength: 17
+        validate: {
+            validator: function(v) {
+                return /^(?:ISBN(?:-13)?:?\ )?(?=[0-9]{13}$|(?=(?:[0-9]+[-\ ]){4})[-\ 0-9]{17}$)97[89][-\ ]?[0-9]{1,5}[-\ ]?[0-9]+[-\ ]?[0-9]+[-\ ]?[0-9]$/.test(v)
+            },
+            message: props => `${props.value} is not a valid ISBN number!`
+
+        }
     }
 })
 
